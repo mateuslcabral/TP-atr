@@ -1,0 +1,92 @@
+
+Claro! Aqui está um guia passo a passo para configurar o InfluxDB, Grafana e o script Python para monitoramento de dados de sensores. Esse guia pode ser usado como documentação para o usuário final.
+
+Guia de Configuração para Monitoramento de Dados de Sensores
+1. Instalar o InfluxDB
+1.1. Baixar e Descompactar o InfluxDB
+Abra o PowerShell.
+
+Execute os seguintes comandos para baixar e descompactar o InfluxDB:
+
+# Baixar o InfluxDB
+Invoke-WebRequest -Uri "https://dl.influxdata.com/influxdb/releases/influxdb-1.8.10_windows_amd64.zip" -OutFile "$env:USERPROFILE\Downloads\influxdb.zip"
+
+# Verificar se o arquivo foi baixado
+if (Test-Path "$env:USERPROFILE\Downloads\influxdb.zip") {
+    # Descompactar o arquivo
+    Expand-Archive -Path "$env:USERPROFILE\Downloads\influxdb.zip" -DestinationPath "$env:USERPROFILE\Downloads\influxdb"
+} else {
+    Write-Host "Erro ao baixar o arquivo."
+}
+
+# Navegar para o diretório descompactado
+cd "$env:USERPROFILE\Downloads\influxdb\influxdb-1.8.10-1"
+
+# Executar o InfluxDB
+Start-Process -FilePath ".\influxd.exe"
+
+
+1.2. Criar o Banco de Dados
+Abra um novo terminal PowerShell.
+
+Navegue até o diretório do InfluxDB e inicie o cliente InfluxDB:
+
+cd "$env:USERPROFILE\Downloads\influxdb\influxdb-1.8.10-1"
+.\influx.exe
+
+No cliente InfluxDB, crie o banco de dados:
+
+CREATE DATABASE sensor_data
+exit
+
+2. Configurar o Script Python para Coletar e Enviar Dados
+2.1. Instalar Dependências
+Instale as bibliotecas necessárias:
+
+pip install paho-mqtt influxdb
+pip install influxdb
+pip install psutil
+
+2.2. Script Python dataproces 
+Navegue até o diretório onde o script está localizado e execute o script:
+
+cd "C:\Users\R7 Gamer\OneDrive - Universidade Federal de Minas Gerais\2024.1\TP ATR"
+python .\DataProcessor.py
+
+2.3. Executar o Script Python sensor
+Abra um terminal PowerShell.
+
+Navegue até o diretório onde o script está localizado e execute o script:
+
+cd "C:\Users\R7 Gamer\OneDrive - Universidade Federal de Minas Gerais\2024.1\TP ATR"
+python .\Sensor.py
+
+3. Configurar o Grafana
+3.1. Baixar e Instalar o Grafana
+Abra o PowerShell.
+
+Execute os seguintes comandos para baixar e descompactar o Grafana:
+
+# Baixar o Grafana
+Invoke-WebRequest -Uri "https://dl.grafana.com/oss/release/grafana-8.4.7.windows-amd64.zip" -OutFile "$env:USERPROFILE\Downloads\grafana.zip"
+
+# Descompactar o arquivo
+Expand-Archive -Path "$env:USERPROFILE\Downloads\grafana.zip" -DestinationPath "$env:USERPROFILE\Downloads\grafana"
+
+# Navegar para o diretório descompactado
+cd "$env:USERPROFILE\Downloads\grafana\grafana-8.4.7"
+
+# Executar o Grafana
+.\bin\grafana-server.exe
+
+3.2. Configurar a Fonte de Dados no Grafana
+Acesse http://localhost:3000 em seu navegador.
+Faça login com as credenciais padrão (admin/admin).
+Vá para Configuration -> Data Sources.
+Clique em Add data source e selecione InfluxDB.
+Preencha os detalhes da conexão:
+URL: http://localhost:8086
+Database: sensor_data
+User: root
+Password: root
+Clique em Save & Test para garantir que a conexão está funcionando.
